@@ -1,4 +1,4 @@
---Create database containing books I've rated on Goodreads
+--Create table containing books I've rated on Goodreads
 CREATE TABLE books_read (
     id INTEGER PRIMARY KEY,
     title TEXT,
@@ -147,31 +147,31 @@ SELECT title, author, goodreads_rating, my_rating
     WHERE my_rating < goodreads_rating
     ORDER BY goodreads_rating DESC;
 
---Update database with a new rating for Lolita
+--Update table with a new rating for Lolita
 SELECT id, title, my_rating FROM books_read WHERE title = "Lolita";
 
 UPDATE books_read SET my_rating = 4 WHERE id = 24;
 
 SELECT id, title, my_rating FROM books_read WHERE id = 24;
 
---Update database with a new book read
+--Update table with a new book read
 INSERT INTO books_read (title, author, genre, year_read, goodreads_rating) VALUES ("Verge", "Lidia Yuknavitch", "Literary fiction", 2022, 3.67);
 
 SELECT id, title, author, goodreads_rating FROM books_read WHERE title = "Verge";
 
---Practice deleting data from the database
+--Practice deleting data from the table
 SELECT id, title, author FROM books_read WHERE id > 100;
 
 DELETE FROM books_read WHERE id = 115;
 
 SELECT id, title, author FROM books_read WHERE id > 100;
 
---Display database sorted by genre
+--Display table data sorted by genre
 SELECT genre, COUNT(*) as by_genre FROM books_read
     GROUP BY genre
     ORDER BY by_genre DESC;
     
---Update database with corrected typos and title case vs. sentence case
+--Update table with corrected typos and title case vs. sentence case
 SELECT id, title, genre FROM books_read WHERE genre = "Children's literatuer";
 
 UPDATE books_read SET genre = "Children's literature" WHERE id = 64;
@@ -194,7 +194,7 @@ UPDATE books_read SET genre = "Psychological fiction" WHERE id = 1;
 
 SELECT id, title, genre FROM books_read WHERE id = 1;
 
---Display database sorted by genre with updates
+--Display table data sorted by genre with updates
 SELECT genre, COUNT(*) as by_genre FROM books_read
     GROUP BY genre
     ORDER BY by_genre DESC;
@@ -204,7 +204,7 @@ SELECT genre, AVG(my_rating) as average_rating, COUNT(*) as by_genre FROM books_
     GROUP BY genre
     ORDER BY average_rating DESC;
     
---Create database containing Booker Prize winners published after 2016
+--Create table containing Booker Prize winners published after 2016
 CREATE TABLE booker_prize_winners (
     id INTEGER PRIMARY KEY,
     title TEXT,
@@ -225,7 +225,7 @@ SELECT genre, ROUND(goodreads_rating - my_rating, 2) AS rating_difference FROM b
     GROUP BY genre
     ORDER BY rating_difference DESC;
 
---Update Booker Prize database with books published between 2000 and 2016
+--Update Booker Prize table with books published between 2000 and 2016
 INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rating) VALUES ("The Sellout", "Paul Beatty", 2016, "Literary fiction", 3.75);
 INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rating) VALUES ("A Brief History of Seven Killings", "Marlon James", 2015, "Historical fiction", 3.89);
 INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rating) VALUES ("The Narrow Road to the Deep North", "Richard Flanagan", 2014, "Historical fiction", 4.02);
@@ -245,7 +245,7 @@ INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rati
 INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rating) VALUES ("True History of the Kelly Gang", "Peter Carey", 2001, "Historical fiction", 3.83);
 INSERT INTO booker_prize_winners (title, author, year_won, genre, goodreads_rating) VALUES ("The Blind Assassin", "Margaret Atwood", 2000, "Psychological fiction", 3.96);
 
---Create database predicting my ratings per genre based on the difference between my ratings and Goodreads' average ratings
+--Create table predicting my ratings per genre based on the difference between my ratings and Goodreads' average ratings
 CREATE TABLE predicting_ratings (
     id  INTEGER PRIMARY KEY,
     genre TEXT,
