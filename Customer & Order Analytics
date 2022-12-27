@@ -1,3 +1,6 @@
+--This SQL provides insight into customer and order data.
+--Source: Database with 6 tables containing customer data and sales data from January through May.
+
 --How many orders were placed in January? 
 SELECT COUNT(orderID) FROM BIT_DB.JanSales
 WHERE orderID <> ''
@@ -31,12 +34,10 @@ SELECT
     Product,
     ROUND(SUM(Quantity * price), 2) AS total_revenue
 FROM BIT_DB.JanSales
-GROUP BY product
+GROUP BY Product
 HAVING Product <> ''
-AND Product <> 'Product';
-
-SELECT orderid, quantity, price, product
-FROM BIT_DB.JanSales;
+AND Product <> 'Product'
+ORDER BY total_revenue DESC;
 
 --How many products were sold in February at 548 Lincoln St, Seattle, WA 98101, and what was the total revenue of these products?
 SELECT 
@@ -44,7 +45,8 @@ SELECT
     Product,
     SUM(Quantity * price) AS total_revenue
 FROM BIT_DB.FebSales
-WHERE location = '548 Lincoln St, Seattle, WA 98101';
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY Product;
 
 --How many customers ordered more than two products at a time in February, and what was the average amount spent for those customers?
 SELECT 
