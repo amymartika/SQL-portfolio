@@ -93,6 +93,13 @@ HAVING Product LIKE '%Headphones%'
     AND Product <> 'Product'
 ORDER BY quantity_sold DESC;
 
+--What was the average amount spent per account in February? (overall average, not average for each account)
+SELECT 
+    SUM(Quantity * price) / COUNT(customers.acctnum) AS average_amount_spent
+FROM BIT_DB.FebSales AS feb_sales
+LEFT JOIN BIT_DB.customers AS customers
+    ON BIT_DB.feb_sales.orderID = BIT_DB.customers.order_ID;
+
 --What was the average quantity of products purchased per account in February? (overall average, not average for each account)
 SELECT 
     SUM(Quantity) / COUNT(customers.acctnum) AS average_items_purchased
