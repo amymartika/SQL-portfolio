@@ -2,7 +2,7 @@
 --Source: Database with 6 tables containing customer data and sales data from January through May.
 
 --How many orders were placed in January? 
-SELECT COUNT(orderID) FROM BIT_DB.JanSales
+SELECT orderID FROM BIT_DB.JanSales
 WHERE orderID <> ''
 AND orderID <> 'Order ID';
 
@@ -17,9 +17,9 @@ SELECT
     DISTINCT customers.acctnum
 FROM BIT_DB.customers AS customers
 INNER JOIN BIT_DB.FebSales AS feb_sales
-ON BIT_DB.customers.order_id = BIT_DB.feb_sales.orderID
+    ON BIT_DB.customers.order_id = BIT_DB.feb_sales.orderID
 WHERE feb_sales.orderID <> ''
-AND feb_sales.orderID <> 'Order ID';
+    AND feb_sales.orderID <> 'Order ID';
 
 --Which product was the cheapest one sold in January, and what was the price? 
 SELECT 
@@ -36,7 +36,7 @@ SELECT
 FROM BIT_DB.JanSales
 GROUP BY Product
 HAVING Product <> ''
-AND Product <> 'Product'
+    AND Product <> 'Product'
 ORDER BY total_revenue DESC;
 
 --How many products were sold in February at 548 Lincoln St, Seattle, WA 98101, and what was the total revenue of these products?
@@ -58,3 +58,14 @@ ON customers.order_ID = feb_sales.orderID
 WHERE feb_sales.Quantity > 2
     AND customers.order_ID <> ''
     AND customers.order_ID <> 'Order ID';
+    
+--List all the products sold in Los Angeles in February, and include how many of each were sold.
+SELECT 
+    Product,
+    SUM(Quantity) AS total_quantity
+FROM BIT_DB.FebSales
+WHERE location LIKE '%Los Angeles%'
+    AND Product <> ''
+    AND Product <> 'Product'
+GROUP BY Product
+ORDER BY total_quantity DESC;
