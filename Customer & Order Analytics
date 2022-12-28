@@ -2,9 +2,11 @@
 --Source: Database with 6 tables containing customer data and sales data from January through May.
 
 --How many orders were placed in January? 
-SELECT orderID FROM BIT_DB.JanSales
+SELECT COUNT(orderID) FROM BIT_DB.JanSales
 WHERE orderID <> ''
-AND orderID <> 'Order ID';
+    AND orderID <> 'Order ID';
+
+SELECT orderID FROM BIT_DB.JanSales;
 
 --How many of those orders were for an iPhone?
 SELECT COUNT(orderID) FROM BIT_DB.JanSales
