@@ -35,8 +35,6 @@ SELECT
     ROUND(SUM(Quantity * price), 2) AS total_revenue
 FROM BIT_DB.JanSales
 GROUP BY Product
-HAVING Product <> ''
-    AND Product <> 'Product'
 ORDER BY total_revenue DESC;
 
 --How many products were sold in February at 548 Lincoln St, Seattle, WA 98101, and what was the total revenue of these products?
@@ -78,8 +76,6 @@ FROM BIT_DB.JanSales
 GROUP BY location
 HAVING location LIKE '%NY%'
     AND total_orders >= 3
-    AND orderID <> ''
-    AND orderID <> 'Order ID'
 ORDER BY location ASC;
 
 --How many of each type of headphone were sold in February?
@@ -89,8 +85,6 @@ SELECT
 FROM BIT_DB.FebSales
 GROUP BY Product
 HAVING Product LIKE '%Headphones%'
-    AND Product <> ''
-    AND Product <> 'Product'
 ORDER BY quantity_sold DESC;
 
 --What was the average amount spent per account in February? (overall average, not average for each account)
@@ -98,14 +92,18 @@ SELECT
     SUM(Quantity * price) / COUNT(customers.acctnum) AS average_amount_spent
 FROM BIT_DB.FebSales AS feb_sales
 LEFT JOIN BIT_DB.customers AS customers
-    ON BIT_DB.feb_sales.orderID = BIT_DB.customers.order_ID;
+    ON BIT_DB.feb_sales.orderID = BIT_DB.customers.order_ID
+WHERE orderid <> '' 
+AND orderid <> 'Order ID';
 
 --What was the average quantity of products purchased per account in February? (overall average, not average for each account)
 SELECT 
     SUM(Quantity) / COUNT(customers.acctnum) AS average_items_purchased
 FROM BIT_DB.FebSales AS feb_sales
 LEFT JOIN BIT_DB.customers AS customers
-    ON BIT_DB.feb_sales.orderID = BIT_DB.customers.order_id;
+    ON BIT_DB.feb_sales.orderID = BIT_DB.customers.order_id
+WHERE orderid <> '' 
+AND orderid <> 'Order ID';
 
 --Which product brought in the most revenue in January and how much revenue did it bring in?
 SELECT 
