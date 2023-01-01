@@ -1,0 +1,39 @@
+--Dataset: Spotify top 50 songs in 2021
+--Source: Kaggle
+--Queried using: SQLite 3
+
+SELECT * FROM BIT_DB.Spotifydata;
+
+--What is the average danceability by artist? 
+SELECT 
+    artist_name, 
+    ROUND(avg(danceability), 3) as average_danceability
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY average_danceability DESC; 
+
+--Who are the top 10 artists based on popularity, and what are their tracks' average danceability and energy?
+SELECT
+    artist_name,
+    ROUND(avg(popularity), 3) AS average_popularity,
+    ROUND(avg(danceability), 3) AS average_danceability,
+    ROUND(avg(energy), 3) AS average_energy
+FROM BIT_DB.spotifydata
+GROUP BY artist_name 
+ORDER BY average_popularity DESC
+LIMIT 10;
+
+--What artist released the longest song?
+SELECT 
+    artist_name,
+    track_name, 
+    duration_ms
+FROM BIT_DB.Spotifydata
+ORDER BY duration_ms DESC
+LIMIT 1;
+
+--What is the average danceability of the top 10 most popular songs?
+SELECT  
+    AVG(danceability) AS average_danceability
+FROM BIT_DB.Spotifydata
+WHERE popularity >= 92;
