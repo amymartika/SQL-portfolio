@@ -1,5 +1,5 @@
 --Dataset: Spotify top 50 songs in 2021
---Source: Kaggle
+--Source: Kaggle https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021
 --Queried using: SQLite 3
 
 SELECT * FROM BIT_DB.Spotifydata;
@@ -32,8 +32,179 @@ FROM BIT_DB.Spotifydata
 ORDER BY duration_ms DESC
 LIMIT 1;
 
---What is the average danceability of the top 10 most popular songs?
+--What is the average danceability of the top 12 most popular songs?
+--I'm selecting the top 12 because songs 9-12 share the same popularity score.
 SELECT  
     AVG(danceability) AS average_danceability
 FROM BIT_DB.Spotifydata
 WHERE popularity >= 92;
+
+--In what key is each track from the dataset?
+--Using pitch-class integer notation: https://smbutterfield.github.io/ibmt17-18/22-intro-to-non-diatonic-materials/b2-tx-pcintnotation.html
+SELECT
+    track_name,
+    artist_name,
+    CASE
+        WHEN song_key = 0 AND song_mode = 1 THEN 'C Major'
+        WHEN song_key = 0 AND song_mode = 0 THEN 'C Minor'
+        WHEN song_key = 1 AND song_mode = 1 THEN 'C#/Db Major'
+        WHEN song_key = 1 AND song_mode = 0 THEN 'C#/Db Minor'
+        WHEN song_key = 2 AND song_mode = 1 THEN 'D Major'
+        WHEN song_key = 2 AND song_mode = 0 THEN 'D Minor'
+        WHEN song_key = 3 AND song_mode = 1 THEN 'D#/Eb Major'
+        WHEN song_key = 3 AND song_mode = 0 THEN 'D#/Eb Minor'
+        WHEN song_key = 4 AND song_mode = 1 THEN 'E Major'
+        WHEN song_key = 4 AND song_mode = 0 THEN 'E Minor'
+        WHEN song_key = 5 AND song_mode = 1 THEN 'F Major'
+        WHEN song_key = 5 AND song_mode = 0 THEN 'F Minor'
+        WHEN song_key = 6 AND song_mode = 1 THEN 'F#/Gb Major'
+        WHEN song_key = 6 AND song_mode = 0 THEN 'F#/Gb Minor'
+        WHEN song_key = 7 AND song_mode = 1 THEN 'G Major'
+        WHEN song_key = 7 AND song_mode = 0 THEN 'G Minor'
+        WHEN song_key = 8 AND song_mode = 1 THEN 'G#/Ab Major'
+        WHEN song_key = 8 AND song_mode = 0 THEN 'G#/Ab Minor'
+        WHEN song_key = 9 AND song_mode = 1 THEN 'A Major'
+        WHEN song_key = 9 AND song_mode = 0 THEN 'A Minor'
+        WHEN song_key = 10 AND song_mode = 1 THEN 'A#/Bb Major'
+        WHEN song_key = 10 AND song_mode = 0 THEN 'A#/Bb Minor'
+        WHEN song_key = 11 AND song_mode = 1 THEN 'B Major'
+        WHEN song_key = 11 AND song_mode = 0 THEN 'B Minor'
+    END AS key
+FROM BIT_DB.Spotifydata
+ORDER BY key;
+
+--What are the most common song keys for the 12 most popular songs?
+--Using pitch-class integer notation: https://smbutterfield.github.io/ibmt17-18/22-intro-to-non-diatonic-materials/b2-tx-pcintnotation.html
+--Note: The 9th-12th most popular songs share the same popularity score.
+SELECT
+    COUNT(*) AS total,
+    CASE
+        WHEN song_key = 0 AND song_mode = 1 THEN 'C Major'
+        WHEN song_key = 0 AND song_mode = 0 THEN 'C Minor'
+        WHEN song_key = 1 AND song_mode = 1 THEN 'C#/Db Major'
+        WHEN song_key = 1 AND song_mode = 0 THEN 'C#/Db Minor'
+        WHEN song_key = 2 AND song_mode = 1 THEN 'D Major'
+        WHEN song_key = 2 AND song_mode = 0 THEN 'D Minor'
+        WHEN song_key = 3 AND song_mode = 1 THEN 'D#/Eb Major'
+        WHEN song_key = 3 AND song_mode = 0 THEN 'D#/Eb Minor'
+        WHEN song_key = 4 AND song_mode = 1 THEN 'E Major'
+        WHEN song_key = 4 AND song_mode = 0 THEN 'E Minor'
+        WHEN song_key = 5 AND song_mode = 1 THEN 'F Major'
+        WHEN song_key = 5 AND song_mode = 0 THEN 'F Minor'
+        WHEN song_key = 6 AND song_mode = 1 THEN 'F#/Gb Major'
+        WHEN song_key = 6 AND song_mode = 0 THEN 'F#/Gb Minor'
+        WHEN song_key = 7 AND song_mode = 1 THEN 'G Major'
+        WHEN song_key = 7 AND song_mode = 0 THEN 'G Minor'
+        WHEN song_key = 8 AND song_mode = 1 THEN 'G#/Ab Major'
+        WHEN song_key = 8 AND song_mode = 0 THEN 'G#/Ab Minor'
+        WHEN song_key = 9 AND song_mode = 1 THEN 'A Major'
+        WHEN song_key = 9 AND song_mode = 0 THEN 'A Minor'
+        WHEN song_key = 10 AND song_mode = 1 THEN 'A#/Bb Major'
+        WHEN song_key = 10 AND song_mode = 0 THEN 'A#/Bb Minor'
+        WHEN song_key = 11 AND song_mode = 1 THEN 'B Major'
+        WHEN song_key = 11 AND song_mode = 0 THEN 'B Minor'
+    END AS key
+FROM BIT_DB.Spotifydata
+WHERE popularity >= 92
+GROUP BY key
+ORDER BY total DESC
+LIMIT 2;
+
+--What are the most common song keys for the entire dataset?
+--Using pitch-class integer notation: https://smbutterfield.github.io/ibmt17-18/22-intro-to-non-diatonic-materials/b2-tx-pcintnotation.html
+SELECT
+    COUNT(*) AS total,
+    CASE
+        WHEN song_key = 0 AND song_mode = 1 THEN 'C Major'
+        WHEN song_key = 0 AND song_mode = 0 THEN 'C Minor'
+        WHEN song_key = 1 AND song_mode = 1 THEN 'C#/Db Major'
+        WHEN song_key = 1 AND song_mode = 0 THEN 'C#/Db Minor'
+        WHEN song_key = 2 AND song_mode = 1 THEN 'D Major'
+        WHEN song_key = 2 AND song_mode = 0 THEN 'D Minor'
+        WHEN song_key = 3 AND song_mode = 1 THEN 'D#/Eb Major'
+        WHEN song_key = 3 AND song_mode = 0 THEN 'D#/Eb Minor'
+        WHEN song_key = 4 AND song_mode = 1 THEN 'E Major'
+        WHEN song_key = 4 AND song_mode = 0 THEN 'E Minor'
+        WHEN song_key = 5 AND song_mode = 1 THEN 'F Major'
+        WHEN song_key = 5 AND song_mode = 0 THEN 'F Minor'
+        WHEN song_key = 6 AND song_mode = 1 THEN 'F#/Gb Major'
+        WHEN song_key = 6 AND song_mode = 0 THEN 'F#/Gb Minor'
+        WHEN song_key = 7 AND song_mode = 1 THEN 'G Major'
+        WHEN song_key = 7 AND song_mode = 0 THEN 'G Minor'
+        WHEN song_key = 8 AND song_mode = 1 THEN 'G#/Ab Major'
+        WHEN song_key = 8 AND song_mode = 0 THEN 'G#/Ab Minor'
+        WHEN song_key = 9 AND song_mode = 1 THEN 'A Major'
+        WHEN song_key = 9 AND song_mode = 0 THEN 'A Minor'
+        WHEN song_key = 10 AND song_mode = 1 THEN 'A#/Bb Major'
+        WHEN song_key = 10 AND song_mode = 0 THEN 'A#/Bb Minor'
+        WHEN song_key = 11 AND song_mode = 1 THEN 'B Major'
+        WHEN song_key = 11 AND song_mode = 0 THEN 'B Minor'
+        ELSE 'No key detected'
+    END AS key
+FROM BIT_DB.Spotifydata
+GROUP BY key
+HAVING total >= 3
+ORDER BY total DESC;
+
+--Create a table with the popularity rankings for each song key.
+--Using song keys ranked by popularity database: https://www.hooktheory.com/cheat-sheet/key-popularity
+CREATE TABLE BIT_DB.PopularSongKeys (
+    id integer PRIMARY KEY,
+    song_key varchar NOT NULL,
+    popularity integer NOT NULL );
+
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('C Major', 1);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('C Minor', 8);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('C#/Db Major', 17);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('C#/Db Minor', 20);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('D Major', 2);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('D Minor', 10);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('D#/Eb Major', 11);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('D#/Eb Minor', 21);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('E Major', 5);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('E Minor', 9);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('F Major', 7);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('F Minor', 16);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('F#/Gb Major', 18);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('F#/Gb Minor', 15);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('G Major', 3);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('G Minor', 12);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('G#/Ab Major', 22);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('G#/Ab Minor', 24);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('A Major', 4);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('A Minor', 6);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('A#/Bb Major', 13);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('A#/Bb Minor', 23);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('B Major', 19);
+INSERT INTO BIT_DB.PopularSongKeys (song_key, popularity)
+VALUES ('B Minor', 14);
+
+--Rank the song keys in the dataset by popularity.
+SELECT 
+    song_key,
+    popularity
+FROM BIT_DB.PopularSongKeys
+ORDER BY popularity ASC;
