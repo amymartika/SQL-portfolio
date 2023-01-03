@@ -324,3 +324,20 @@ LEFT JOIN BIT_DB.PopularSongKeys AS popular_keys
 ON top_tracks.tonality = popular_keys.song_key
 GROUP BY top_tracks.tonality
 ORDER BY total DESC;
+
+--Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star."
+WITH average_popularity_CTE AS (
+    SELECT 
+        top_tracks.artist_name,
+        AVG(top_tracks.popularity) AS artist_popularity
+    FROM Spotifydata AS top_tracks
+    GROUP BY top_tracks.artist_name
+    )
+    
+SELECT 
+    artist_name, 
+    artist_popularity,
+    'Top Star' AS tag
+FROM average_popularity_CTE
+WHERE artist_popularity >= 90
+ORDER BY artist_popularity DESC;
