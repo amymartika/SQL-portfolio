@@ -208,3 +208,119 @@ SELECT
     popularity
 FROM BIT_DB.PopularSongKeys
 ORDER BY popularity ASC;
+
+--Create column combining song key and mode in a more readable way
+ALTER TABLE BIT_DB.Spotifydata
+ADD tonality varchar;
+
+--Add data for new tonality column
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'A Major'
+WHERE id = 4;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'A Minor'
+WHERE id = 44;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'A#/Bb Major'
+WHERE id
+IN (1, 38);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'A#/Bb Minor'
+WHERE id = 13;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'B Major'
+WHERE id 
+IN (9, 37);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'B Minor'
+WHERE id
+IN (10, 14, 26, 41);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'C Major'
+WHERE id
+IN (6, 15, 24, 27, 28, 31, 48);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'C#/Db Major'
+WHERE id
+IN (3, 8, 23, 32, 34, 40);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'C#/Db Minor'
+WHERE id
+IN (42, 45);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'D Major'
+WHERE id
+IN (18, 25);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'D#/Eb Major'
+WHERE id = 29;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'D#/Eb Minor'
+WHERE id = 19;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'E Major'
+WHERE id = 49;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'E Minor'
+WHERE id
+IN (11, 12, 50);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'F Major'
+WHERE id = 17;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'F Minor'
+WHERE id = 43;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'F#/Gb Major'
+WHERE id = 35;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'F#/Gb Minor'
+WHERE id
+IN (5, 22, 39);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'G Major'
+WHERE id
+IN (30, 36);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'G Minor'
+WHERE id = 20;
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'G#/Ab Major'
+WHERE id
+IN (7, 16, 33, 46, 47);
+
+UPDATE BIT_DB.Spotifydata
+SET tonality = 'G#/Ab Minor'
+WHERE id
+IN (2, 21);
+
+--Compare the most popular song keys with song keys most represented in the top 50 tracks of 2019.
+SELECT 
+    COUNT(top_tracks.track_name) AS total,
+    top_tracks.tonality,
+    popular_keys.popularity AS popular_song_keys
+FROM BIT_DB.Spotifydata AS top_tracks
+LEFT JOIN BIT_DB.PopularSongKeys AS popular_keys
+ON top_tracks.tonality = popular_keys.song_key
+GROUP BY top_tracks.tonality
+ORDER BY total DESC;
