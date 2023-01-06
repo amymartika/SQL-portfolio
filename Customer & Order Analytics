@@ -115,3 +115,23 @@ HAVING Product <> ''
     AND Product <> 'Product'
 ORDER BY total_revenue DESC
 LIMIT 1;
+
+--Query the account numbers, count of order IDs, product, quantity, price, order date, and location for all orders that were placed in February.
+SELECT 
+    c.acctnum,
+    count(f.orderID) AS orders,
+    f.product,
+    f.quantity,
+    f.price,
+    f.orderdate,
+    f.location
+FROM BIT_DB.FebSales AS f
+INNER JOIN BIT_DB.customers AS c
+ON f.orderid = c.order_id
+GROUP BY 
+    c.acctnum,
+    f.product,
+    f.quantity,
+    f.price,
+    f.orderdate,
+    f.location;
