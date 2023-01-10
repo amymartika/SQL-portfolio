@@ -1,0 +1,23 @@
+--Dataset: Chicago Taxi Trips from BigQuery
+--Source: https://www.kaggle.com/datasets/chicago/chicago-taxi-trips-bq
+--Queried using: Kaggle Notebook
+
+# Display the rolling average of the daily number of taxi trips
+avg_num_trips_query = """
+                      WITH trips_by_day AS
+                      (
+                      SELECT DATE(trip_start_timestamp) AS trip_date,
+                          COUNT(*) as num_trips
+                      FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`
+                      WHERE trip_start_timestamp >= '2016-01-01' AND trip_start_timestamp < '2018-01-01'
+                      GROUP BY trip_date
+                      ORDER BY trip_date
+                      )
+                      SELECT trip_date,
+                          AVG(num_trips)
+                          OVER (
+                               ORDER BY trip_date
+                               ROWS BETWEEN 15 PRECEDING AND 15 FOLLOWING
+                               ) AS avg_num_trips
+                      FROM trips_by_day
+                      """
