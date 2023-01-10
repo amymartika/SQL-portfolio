@@ -2,12 +2,6 @@
 --Source: https://www.kaggle.com/datasets/stackoverflow/stackoverflow
 --Queried using: Kaggle Notebook
 
-# Set up feedback system
-from learntools.core import binder
-binder.bind(globals())
-from learntools.sql_advanced.ex1 import *
-print("Setup Complete")
-
 from google.cloud import bigquery
 
 # Create a "Client" object
