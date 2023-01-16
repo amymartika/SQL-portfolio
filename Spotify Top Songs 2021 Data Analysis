@@ -314,7 +314,7 @@ SET tonality = 'G#/Ab Minor'
 WHERE id
 IN (2, 21);
 
---Compare the most popular song keys with song keys most represented in the top 50 tracks of 2019.
+--Compare the most popular song keys with song keys most represented in the top 50 tracks of 2021.
 SELECT 
     COUNT(top_tracks.track_name) AS total,
     top_tracks.tonality,
