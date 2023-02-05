@@ -24,3 +24,26 @@ order by country, gender;
 
 -- Our customers who spend the most amount on an average order are 35-year-old females in Germany and 35-year-old males in France.
 -- Our customers who spend the least amount on an average order are in the United States.
+
+-- Let's look at the product categories with the most sales.
+
+select
+    category,
+    count(id) as orders
+from online_sales
+group by category
+order by orders desc;
+
+-- Our accessories account 64.6% of all our online sales.
+
+-- Let's look at a similar breakdown for the subcategories within accessories.
+
+select 
+    subcategory,
+    count(id) as orders
+from online_sales
+where category = 'Accessories'
+group by subcategory
+order by orders desc;
+
+-- Tires and tubes account for 49.3% of all our accessories sales.
