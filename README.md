@@ -1,13 +1,6 @@
 # Amy Brown's SQL Portfolio
 
-Hello, and thanks for stopping by! This repository contains examples of SQL I've written for solo projects and while working through the following courses: 
-
-* **Querying and Managing Data**, Khan Academy
-* **Intro to SQL**, Kaggle
-* **Data Analytics Certificate Course**, Break Into Tech
-* **Advanced SQL**, Kaggle
-
-Below are some highlighted projects. Feel free to take a look around and [reach out](https://www.linkedin.com/in/amymartikabrown/) if you have any questions.
+Hello, and thanks for stopping by! This repository contains examples of SQL I've written for solo projects and while working through SQL, machine learning, and other data analytics courses. Below are a few highlighted projects. Feel free to take a look around and [reach out](https://www.linkedin.com/in/amymartikabrown/) if you have any questions.
 
 ## Highlighted Projects
 * **Spotify Top Songs Analaysis** - [SQL](https://github.com/amymartika/SQL/blob/main/Spotify%20Top%20Songs%202021%20Data%20Analysis): In this project, I used a dataset found on Kaggle to analyze trends in the top 50 songs of 2021. Using pitch-class integer notation, I examined the key and tonality for these top songs. I joined data from a Hooktheory database to compare the most popular song keys with the song keys most represented in the top 50 Spotify tracks of 2021.
