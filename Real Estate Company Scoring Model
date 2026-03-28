@@ -1,3 +1,15 @@
+/* 
+The following query creates a dynamic ranking system for real estate companies claiming to pay cash for homes. 
+The result of this data set will be used by an algorithmic content team looking to connect home sellers with reputable companies in their area.
+
+This query performs the following: 
+- Create a new record for each market where a company has activity.
+- When two records are present for a company + market record, select one based on trust signals.
+- Test for eligibility on each company + market record. This adds a layer of security against including scam companies in a top 10 ranking.
+- Score each company + market record within its market based on trust signals. 
+- Provide a ranked list of companies within the given market to be used by the content team.
+*/ 
+
 with eligible_records as (
 	select
 		*,
@@ -100,5 +112,5 @@ select
 		else null
 	end as market_rank
 from market_rankings
-where market_city = 'Kansas City'
+
 order by eligible_flag desc, market_rank asc;
