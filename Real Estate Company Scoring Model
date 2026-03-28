@@ -1,0 +1,104 @@
+with eligible_records as (
+	select
+		*,
+		trim(j.city) as market_city,
+		-- flag record as eligible/ineligible
+		case
+			when ((website is not null or phone_number is not null)
+				and is_cash_home_buyer = 'TRUE' 
+				and months_since_last_review < 18
+				and avg_review_rating >= 3)
+			then 1
+			else 0
+		end as eligible_flag
+	from real_estate_data.cash_companies
+
+	-- pull each city + company ID record
+	-- city + state records would need to be validated
+	join json_table(
+		concat('["', replace(cities, ',', '","'), '"]'),
+		"$[*]" columns(
+			city varchar(255) path "$"
+		)
+	) as j
+),
+
+deduped_markets as (
+	select *
+	from (
+		select
+			e.*,
+			row_number() over (
+				partition by name, market_city
+				order by 
+					coalesce(cast(reviews_last_18_months as unsigned), 0) desc,
+					coalesce(cast(num_reviews as unsigned), 0) desc
+			) as rn
+		from eligible_records as e
+	) x
+	where rn = 1
+),
+
+market_rankings as (
+	select
+		name, 
+		market_city, 
+		eligible_flag,
+		-- favor avg 18 month rating
+		cast(avg_rating_last_18_months as decimal(10, 2)) as avg_18_mo,
+		cast(avg_rating_last_6_months as decimal(10, 2)) as avg_6_mo,
+		num_reviews, 
+		coalesce(num_1_star_reviews, 0) as num_1, 
+		coalesce(num_2_star_reviews, 0) as num_2,
+		coalesce(num_1_star_reviews, 0) + coalesce(num_2_star_reviews, 0) as num_neg_reviews,
+		cast(
+			(coalesce(num_1_star_reviews, 0) + coalesce(num_2_star_reviews, 0)) / nullif(num_reviews, 0)
+			as decimal(10, 2)
+		) as pct_neg_reviews,
+		-- favor low percent of 1- and 2-star reviews
+		5 * (
+			1 - cast(
+				(coalesce(num_1_star_reviews, 0) + coalesce(num_2_star_reviews, 0)) / nullif(num_reviews, 0)
+				as decimal(10, 2)
+			)
+		) as low_neg_reviews, 
+		reviews_last_6_months, 
+		reviews_last_18_months,
+		-- favor combination of short- and mid-term activity
+		(case
+			when reviews_last_6_months >= 3 and reviews_last_18_months >= 3 then 5
+			when reviews_last_6_months >= 1 and reviews_last_18_months >= 3 then 4
+			when reviews_last_6_months >= 1 and reviews_last_18_months < 3 then 3
+			when reviews_last_6_months < 1 and reviews_last_18_months >= 3 then 1
+			else 0
+		end) as recent_local_activity,
+		-- penalize low avg in last 6 months
+		case
+			when cast(avg_rating_last_6_months as decimal(10, 2)) < 4 then -0.5
+			else 0
+		end as recent_neg_penalty
+	from deduped_markets
+)
+
+select 
+	*, 
+	-- score only if eligibility is met
+	case
+		when eligible_flag = 1 then round((avg_18_mo + low_neg_reviews + recent_local_activity + recent_neg_penalty) / 3, 2) 
+		else null
+	end as total_score,
+	-- rank in descending order of total score
+	case
+		when eligible_flag = 1 then row_number() over (
+			partition by market_city
+			-- tie break with number of reviews followed by recent reviews
+			order by 
+				((avg_18_mo + low_neg_reviews + recent_local_activity + recent_neg_penalty) / 3) desc,
+				num_reviews desc,
+				reviews_last_6_months desc
+		)
+		else null
+	end as market_rank
+from market_rankings
+where market_city = 'Kansas City'
+order by eligible_flag desc, market_rank asc;
